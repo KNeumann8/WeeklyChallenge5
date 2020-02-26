@@ -8,9 +8,7 @@ public class Rectangle {
     First of all, it's violating command/query separation.
     It's both a setter (command) and a getter (query)!
      */
-    public double getArea(double length, double width) {
-        this.length = length;
-        this.width = width;
+    public double getArea() {
         return length * width;
     }
 

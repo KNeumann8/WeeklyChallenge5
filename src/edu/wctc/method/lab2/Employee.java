@@ -37,27 +37,33 @@ public class Employee {
     private LocalDate orientationDate;
 
     public Employee(String firstName, String lastName, String ssn) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.ssn = ssn;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setSsn(ssn);
+    }
+
+    public void performNewHireDuties(LocalDate orientationDate,String cubeId){
+        setOrientationDate(orientationDate);
+        meetWithHrForBenefitAndSalaryInfo();
+        meetDepartmentStaff();
+        reviewDeptPolicies();
+        moveIntoCubicle(cubeId);
     }
 
     // Assume this must be performed first, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetWithHrForBenefitAndSalaryInfo() {
-        metWithHr = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+    private void meetWithHrForBenefitAndSalaryInfo() {
+        setMetWithHr(true);
+        String fmtDate = getFMTDate();
         System.out.println(firstName + " " + lastName + " met with HR on "
                 + fmtDate);
     }
 
     // Assume this must be performed second, and assume that an employee
     // would only do this once, upon being hired.
-    public void meetDepartmentStaff() {
-        metDeptStaff = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+    private void meetDepartmentStaff() {
+        setMetDeptStaff(true);
+        String fmtDate = getFMTDate();
         System.out.println(firstName + " " + lastName + " met with dept staff on "
                 + fmtDate);
     }
@@ -66,9 +72,8 @@ public class Employee {
     // policies may change that this method may need to be called 
     // independently from other classes.
     public void reviewDeptPolicies() {
-        reviewedDeptPolicies = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+        setReviewedDeptPolicies(true);
+        String fmtDate = getFMTDate();
         System.out.println(firstName + " " + lastName + " reviewed dept policies on "
                 + fmtDate);
     }
@@ -77,12 +82,17 @@ public class Employee {
     // sometimes change office locations that this method may need to be called 
     // independently from other classes.
     public void moveIntoCubicle(String cubeId) {
-        this.cubeId = cubeId;
-        this.movedIn = true;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
-        String fmtDate = formatter.format(orientationDate);
+        setCubeId(cubeId);
+        setMovedIn(true);
+        String fmtDate = getFMTDate();
         System.out.println(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + fmtDate);
+    }
+
+    private String getFMTDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+        String fmtDate = formatter.format(orientationDate);
+        return  fmtDate;
     }
 
     public String getFirstName() {
@@ -93,7 +103,14 @@ public class Employee {
     // allowed through validation.
 
     public void setFirstName(String firstName) {
+        nameValidate(firstName);
         this.firstName = firstName;
+    }
+
+    private void nameValidate(String name){
+        if(name == null || name.length()<=0){
+            throw new IllegalArgumentException("First Name is blank. It needs a value!");
+        }
     }
 
     public String getLastName() {
@@ -101,6 +118,7 @@ public class Employee {
     }
 
     public void setLastName(String lastName) {
+        nameValidate(lastName);
         this.lastName = lastName;
     }
 
@@ -108,8 +126,25 @@ public class Employee {
         return ssn;
     }
 
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+    private void setSsn(String ssn) {
+        boolean valid = true;
+        char[] ssnA = ssn.toCharArray();
+        if((ssnA[3]!='-'||ssnA[6]!='-')&&ssnA.length==11){
+            ssnA[3] = 0;
+            ssnA[6] = 0;
+            for(char c : ssnA){
+                if(!Character.isDigit(c)) valid = false;
+            }
+        }
+        else if(ssnA.length==9){
+            for(char c : ssnA){
+                if(!Character.isDigit(c)) valid = false;
+            }
+        }
+        else valid = false;
+
+        if(valid = false) throw new IllegalArgumentException("Invalid Social Security Number!");
+        else this.ssn = ssn;
     }
 
     public boolean hasMetWithHr() {
@@ -117,7 +152,7 @@ public class Employee {
     }
 
     // boolean parameters need no validation
-    public void setMetWithHr(boolean metWithHr) {
+    private void setMetWithHr(boolean metWithHr) {
         this.metWithHr = metWithHr;
     }
 
@@ -125,7 +160,7 @@ public class Employee {
         return metDeptStaff;
     }
 
-    public void setMetDeptStaff(boolean metDeptStaff) {
+    private void setMetDeptStaff(boolean metDeptStaff) {
         this.metDeptStaff = metDeptStaff;
     }
 
@@ -133,7 +168,7 @@ public class Employee {
         return reviewedDeptPolicies;
     }
 
-    public void setReviewedDeptPolicies(boolean reviewedDeptPolicies) {
+    private void setReviewedDeptPolicies(boolean reviewedDeptPolicies) {
         this.reviewedDeptPolicies = reviewedDeptPolicies;
     }
 
@@ -141,7 +176,7 @@ public class Employee {
         return movedIn;
     }
 
-    public void setMovedIn(boolean movedIn) {
+    private void setMovedIn(boolean movedIn) {
         this.movedIn = movedIn;
     }
 
@@ -149,7 +184,7 @@ public class Employee {
         return cubeId;
     }
 
-    public void setCubeId(String cubeId) {
+    private void setCubeId(String cubeId) {
         this.cubeId = cubeId;
     }
 
@@ -157,7 +192,10 @@ public class Employee {
         return orientationDate;
     }
 
-    public void setOrientationDate(LocalDate orientationDate) {
+    private void setOrientationDate(LocalDate orientationDate) {
+        if (orientationDate == null) {
+            throw new IllegalArgumentException("orientation date is blank!");
+        }
         this.orientationDate = orientationDate;
     }
 }

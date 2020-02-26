@@ -106,7 +106,7 @@ public class Employee {
     // doFirstTimeOrientation()
     private void meetDepartmentStaff() {
         metDeptStaff = true;
-        System.out.println(firstName + " " + lastName + " met with dept staff on "
+        output.simpleOutput(firstName + " " + lastName + " met with dept staff on "
                 + getFormattedDate());
     }
 
@@ -115,7 +115,7 @@ public class Employee {
     // independently from other classes.
     public void reviewDeptPolicies() {
         reviewedDeptPolicies = true;
-        System.out.println(firstName + " " + lastName + " reviewed dept policies on "
+        output.simpleOutput(firstName + " " + lastName + " reviewed dept policies on "
                 + getFormattedDate());
     }
 
@@ -126,7 +126,7 @@ public class Employee {
         setCubeId(cubeId);
 
         this.movedIn = true;
-        System.out.println(firstName + " " + lastName + " moved into cubicle "
+        output.simpleOutput(firstName + " " + lastName + " moved into cubicle "
                 + cubeId + " on " + getFormattedDate());
     }
 
@@ -151,7 +151,7 @@ public class Employee {
 
     public void setLastName(String lastName) {
         if (lastName == null || lastName.isEmpty()) {
-            System.out.println("last name is required");
+            throw new IllegalArgumentException("last name is required");
         }
         this.lastName = lastName;
     }
@@ -162,7 +162,7 @@ public class Employee {
 
     public void setSsn(String ssn) {
         if (ssn == null || ssn.length() < 9 || ssn.length() > 11) {
-            System.out.println("ssn is required and must be "
+            throw new IllegalArgumentException("ssn is required and must be "
                     + "between 9 and 11 characters (if hyphens are used)");
         }
         this.ssn = ssn;
@@ -207,7 +207,7 @@ public class Employee {
 
     public void setCubeId(String cubeId) {
         if (cubeId == null || cubeId.isEmpty()) {
-            System.out.println("cube id is required");
+            throw new IllegalArgumentException("cube id is required");
         }
         this.cubeId = cubeId;
     }
@@ -218,7 +218,7 @@ public class Employee {
 
     public void setOrientationDate(LocalDate orientationDate) {
         if (orientationDate == null) {
-            System.out.println("orientation date is required");
+            throw new IllegalArgumentException("orientation date is required");
         }
         this.orientationDate = orientationDate;
     }
